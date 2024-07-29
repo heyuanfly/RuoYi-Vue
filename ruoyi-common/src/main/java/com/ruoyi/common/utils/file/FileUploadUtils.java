@@ -23,7 +23,7 @@ import com.ruoyi.common.utils.uuid.Seq;
 public class FileUploadUtils
 {
     /**
-     * 默认大小 50M
+     * 默认最大 50M
      */
     public static final long DEFAULT_MAX_SIZE = 50 * 1024 * 1024L;
 
@@ -87,7 +87,7 @@ public class FileUploadUtils
     }
 
     /**
-     * 文件上传
+     * 文件上传：判断文件名称长度、扩展名、大小是否合规，把上传的文件输入到指定路径中
      *
      * @param baseDir 相对应用的基目录
      * @param file 上传的文件
@@ -113,12 +113,13 @@ public class FileUploadUtils
         String fileName = extractFilename(file);
 
         String absPath = getAbsoluteFile(baseDir, fileName).getAbsolutePath();
+        //把上传的文件输入到指定路径中
         file.transferTo(Paths.get(absPath));
         return getPathFileName(baseDir, fileName);
     }
 
     /**
-     * 编码文件名
+     * 编码文件名：格式化文件名
      */
     public static final String extractFilename(MultipartFile file)
     {
@@ -148,7 +149,7 @@ public class FileUploadUtils
     }
 
     /**
-     * 文件大小校验
+     * 文件大小校验、扩展名是否允许
      *
      * @param file 上传的文件
      * @return
@@ -166,6 +167,7 @@ public class FileUploadUtils
 
         String fileName = file.getOriginalFilename();
         String extension = getExtension(file);
+        //如果扩展名不允许，抛出对应异常
         if (allowedExtension != null && !isAllowedExtension(extension, allowedExtension))
         {
             if (allowedExtension == MimeTypeUtils.IMAGE_EXTENSION)
@@ -204,6 +206,7 @@ public class FileUploadUtils
      */
     public static final boolean isAllowedExtension(String extension, String[] allowedExtension)
     {
+        // 判断上传文件的扩展名是否在允许列表中
         for (String str : allowedExtension)
         {
             if (str.equalsIgnoreCase(extension))

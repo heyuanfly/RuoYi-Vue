@@ -53,6 +53,7 @@ public class TokenService
 
     @Autowired
     private RedisCache redisCache;
+    private LoginUser loginUser;
 
     /**
      * 获取用户身份信息
@@ -146,6 +147,7 @@ public class TokenService
      */
     public void refreshToken(LoginUser loginUser)
     {
+        this.loginUser = loginUser;
         loginUser.setLoginTime(System.currentTimeMillis());
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存

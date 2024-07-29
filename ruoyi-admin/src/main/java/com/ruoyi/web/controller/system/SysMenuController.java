@@ -22,8 +22,8 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysMenuService;
 
 /**
- * 菜单信息
- * 
+ * 菜单信息增删改查
+ *
  * @author ruoyi
  */
 @RestController
@@ -34,7 +34,7 @@ public class SysMenuController extends BaseController
     private ISysMenuService menuService;
 
     /**
-     * 获取菜单列表
+     * 获取指定菜单列表
      */
     @PreAuthorize("@ss.hasPermi('system:menu:list')")
     @GetMapping("/list")
@@ -55,7 +55,7 @@ public class SysMenuController extends BaseController
     }
 
     /**
-     * 获取菜单下拉树列表
+     * 获取指定菜单下拉树列表
      */
     @GetMapping("/treeselect")
     public AjaxResult treeselect(SysMenu menu)

@@ -21,8 +21,8 @@ import com.ruoyi.system.domain.SysLogininfor;
 import com.ruoyi.system.service.ISysLogininforService;
 
 /**
- * 系统访问记录
- * 
+ * 系统登录访问记录
+ *
  * @author ruoyi
  */
 @RestController
@@ -35,6 +35,11 @@ public class SysLogininforController extends BaseController
     @Autowired
     private SysPasswordService passwordService;
 
+    /**
+     * 调用service层获取登录历史记录
+     * @param logininfor
+     * @return
+     */
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysLogininfor logininfor)
@@ -44,6 +49,11 @@ public class SysLogininforController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 使用ExcelUtil导出登录记录
+     * @param response
+     * @param logininfor
+     */
     @Log(title = "登录日志", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:export')")
     @PostMapping("/export")
@@ -54,6 +64,11 @@ public class SysLogininforController extends BaseController
         util.exportExcel(response, list, "登录日志");
     }
 
+    /**
+     * 根据id删除登录记录
+     * @param infoIds
+     * @return
+     */
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
     @Log(title = "登录日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/{infoIds}")
@@ -62,6 +77,10 @@ public class SysLogininforController extends BaseController
         return toAjax(logininforService.deleteLogininforByIds(infoIds));
     }
 
+    /**
+     * 清空登录记录
+     * @return
+     */
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
     @Log(title = "登录日志", businessType = BusinessType.CLEAN)
     @DeleteMapping("/clean")
@@ -71,6 +90,11 @@ public class SysLogininforController extends BaseController
         return success();
     }
 
+    /**
+     * 密码输入正确后，清空之前的登录失败记录和登录锁定记录缓存
+     * @param userName
+     * @return
+     */
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:unlock')")
     @Log(title = "账户解锁", businessType = BusinessType.OTHER)
     @GetMapping("/unlock/{userName}")

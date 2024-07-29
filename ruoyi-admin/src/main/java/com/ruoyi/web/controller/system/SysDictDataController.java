@@ -27,7 +27,7 @@ import com.ruoyi.system.service.ISysDictTypeService;
 
 /**
  * 数据字典信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -40,6 +40,11 @@ public class SysDictDataController extends BaseController
     @Autowired
     private ISysDictTypeService dictTypeService;
 
+    /**
+     * 根据条件查询字典数据列表
+     * @param dictData
+     * @return
+     */
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysDictData dictData)
@@ -49,6 +54,11 @@ public class SysDictDataController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 根据条件查询字典数据并导出到excel，通过response返回
+     * @param response
+     * @param dictData
+     */
     @Log(title = "字典数据", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:dict:export')")
     @PostMapping("/export")
@@ -60,7 +70,7 @@ public class SysDictDataController extends BaseController
     }
 
     /**
-     * 查询字典数据详细
+     * 根据id查询字典数据信息
      */
     @PreAuthorize("@ss.hasPermi('system:dict:query')")
     @GetMapping(value = "/{dictCode}")

@@ -21,8 +21,8 @@ import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.service.ISysNoticeService;
 
 /**
- * 公告 信息操作处理
- * 
+ * 公告信息crud
+ *
  * @author ruoyi
  */
 @RestController

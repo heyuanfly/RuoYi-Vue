@@ -21,8 +21,9 @@ import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.system.service.ISysConfigService;
 
 /**
- * 验证码操作处理
- * 
+ * 验证码操作处理：使用google api生成验证码图片，把正确验证码结果及其uuid存入redis用于之后比对
+ * 把验证码图片和对应的uuid返回给前端
+ *
  * @author ruoyi
  */
 @RestController
@@ -36,7 +37,7 @@ public class CaptchaController
 
     @Autowired
     private RedisCache redisCache;
-    
+
     @Autowired
     private ISysConfigService configService;
     /**
@@ -46,14 +47,16 @@ public class CaptchaController
     public AjaxResult getCode(HttpServletResponse response) throws IOException
     {
         AjaxResult ajax = AjaxResult.success();
+        // 读取验证码配置：开启/关闭
         boolean captchaEnabled = configService.selectCaptchaEnabled();
         ajax.put("captchaEnabled", captchaEnabled);
+        // 如果不需要验证码则直接返回
         if (!captchaEnabled)
         {
             return ajax;
         }
 
-        // 保存验证码信息
+        // 生成验证码对应的key:一个uuid字符串
         String uuid = IdUtils.simpleUUID();
         String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
 
@@ -61,7 +64,9 @@ public class CaptchaController
         BufferedImage image = null;
 
         // 生成验证码
+        // 获取配置中指定的验证码类型：数字/字母
         String captchaType = RuoYiConfig.getCaptchaType();
+        // 使用google提供的api生成字母或者数学验证码
         if ("math".equals(captchaType))
         {
             String capText = captchaProducerMath.createText();
@@ -75,8 +80,9 @@ public class CaptchaController
             image = captchaProducer.createImage(capStr);
         }
 
+        // 把正确的验证码结果预先存入redis
         redisCache.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
-        // 转换流信息写出
+        // 把验证码图片转换成字节流
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         try
         {
@@ -86,7 +92,7 @@ public class CaptchaController
         {
             return AjaxResult.error(e.getMessage());
         }
-
+        // 把验证码图片字节流及其对应的uuid,写入到ajax响应中返回给前端
         ajax.put("uuid", uuid);
         ajax.put("img", Base64.encode(os.toByteArray()));
         return ajax;

@@ -22,8 +22,8 @@ import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.config.ServerConfig;
 
 /**
- * 通用请求处理
- * 
+ * 通用请求处理：文件上传和下载，获得文件的名称、路径，调用FileUtils完成具体逻辑
+ *
  * @author ruoyi
  */
 @RestController
@@ -39,7 +39,7 @@ public class CommonController
 
     /**
      * 通用下载请求
-     * 
+     *
      * @param fileName 文件名称
      * @param delete 是否删除
      */
@@ -52,11 +52,15 @@ public class CommonController
             {
                 throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 ", fileName));
             }
+
             String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
+            // 获取文件路径
             String filePath = RuoYiConfig.getDownloadPath() + fileName;
 
+            // 设置response header返回文件信息
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             FileUtils.setAttachmentResponseHeader(response, realFileName);
+            // 把文件写入response输出流
             FileUtils.writeBytes(filePath, response.getOutputStream());
             if (delete)
             {
@@ -83,10 +87,10 @@ public class CommonController
             String fileName = FileUploadUtils.upload(filePath, file);
             String url = serverConfig.getUrl() + fileName;
             AjaxResult ajax = AjaxResult.success();
-            ajax.put("url", url);
-            ajax.put("fileName", fileName);
-            ajax.put("newFileName", FileUtils.getName(fileName));
-            ajax.put("originalFilename", file.getOriginalFilename());
+            ajax.put("url", url);//文件url
+            ajax.put("fileName", fileName);//完整路径名
+            ajax.put("newFileName", FileUtils.getName(fileName)); //没有路径前缀的文件名
+            ajax.put("originalFilename", file.getOriginalFilename());//获得原始文件名称
             return ajax;
         }
         catch (Exception e)

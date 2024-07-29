@@ -28,8 +28,8 @@ import com.ruoyi.quartz.util.CronUtils;
 import com.ruoyi.quartz.util.ScheduleUtils;
 
 /**
- * 调度任务信息操作处理
- * 
+ * 调度任务信息操作处理:增删改查。运行任务
+ *
  * @author ruoyi
  */
 @RestController

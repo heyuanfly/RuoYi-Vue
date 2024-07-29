@@ -25,7 +25,7 @@ import com.ruoyi.system.service.ISysUserOnlineService;
 
 /**
  * 在线用户监控
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -38,6 +38,12 @@ public class SysUserOnlineController extends BaseController
     @Autowired
     private RedisCache redisCache;
 
+    /**
+     * 获取符合条件的在线用户列表
+     * @param ipaddr 指定ip
+     * @param userName 指定用户名
+     * @return
+     */
     @PreAuthorize("@ss.hasPermi('monitor:online:list')")
     @GetMapping("/list")
     public TableDataInfo list(String ipaddr, String userName)
@@ -77,6 +83,7 @@ public class SysUserOnlineController extends BaseController
     @DeleteMapping("/{tokenId}")
     public AjaxResult forceLogout(@PathVariable String tokenId)
     {
+        //从redis中清除指定token对应的用户内容
         redisCache.deleteObject(CacheConstants.LOGIN_TOKEN_KEY + tokenId);
         return success();
     }

@@ -15,7 +15,7 @@ import com.ruoyi.framework.security.context.AuthenticationContextHolder;
 
 /**
  * 登录密码方法
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -32,7 +32,7 @@ public class SysPasswordService
 
     /**
      * 登录账户密码错误次数缓存键名
-     * 
+     *
      * @param username 用户名
      * @return 缓存键key
      */
@@ -54,11 +54,13 @@ public class SysPasswordService
             retryCount = 0;
         }
 
+        //如果登录密码输入粗错误次数超过限制，并且没到可以重试的时间，抛异常
         if (retryCount >= Integer.valueOf(maxRetryCount).intValue())
         {
             throw new UserPasswordRetryLimitExceedException(maxRetryCount, lockTime);
         }
 
+        //如果密码不对，重试次数+1，并保存到redis，然后抛出密码不匹配异常
         if (!matches(user, password))
         {
             retryCount = retryCount + 1;
@@ -67,15 +69,25 @@ public class SysPasswordService
         }
         else
         {
+            //如果密码输入正确，就清空之前输错的记录缓存
             clearLoginRecordCache(username);
         }
     }
 
+    /**
+     * 检验密码是否正确
+     * @param user
+     * @param rawPassword
+     * @return
+     */
     public boolean matches(SysUser user, String rawPassword)
     {
         return SecurityUtils.matchesPassword(rawPassword, user.getPassword());
     }
 
+    /**
+     * 密码输入正确之后，清空之前密码输错的记录和锁定时间
+     */
     public void clearLoginRecordCache(String loginName)
     {
         if (redisCache.hasKey(getCacheKey(loginName)))

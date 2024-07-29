@@ -23,8 +23,8 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysDeptService;
 
 /**
- * 部门信息
- * 
+ * 增删改查部门信息，删除、修改、查询某个部门时需要先验证数据权限
+ *
  * @author ruoyi
  */
 @RestController
@@ -53,6 +53,7 @@ public class SysDeptController extends BaseController
     public AjaxResult excludeChild(@PathVariable(value = "deptId", required = false) Long deptId)
     {
         List<SysDept> depts = deptService.selectDeptList(new SysDept());
+        //删除被排除部门及其子部门
         depts.removeIf(d -> d.getDeptId().intValue() == deptId || ArrayUtils.contains(StringUtils.split(d.getAncestors(), ","), deptId + ""));
         return success(depts);
     }

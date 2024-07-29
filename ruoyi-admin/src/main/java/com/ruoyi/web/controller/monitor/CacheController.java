@@ -23,8 +23,8 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysCache;
 
 /**
- * 缓存监控
- * 
+ * 缓存监控：就是使用redis提供的api获取和删除缓存的名称，key，value等信息
+ *
  * @author ruoyi
  */
 @RestController
@@ -45,10 +45,17 @@ public class CacheController
         caches.add(new SysCache(CacheConstants.PWD_ERR_CNT_KEY, "密码错误次数"));
     }
 
+    /**
+     * 获取redis缓存信息：redis连接信息，数据库大小，命令状态
+     * 该方法映射的URL=所在controller指定的"/monitor/cache"
+     * @return
+     * @throws Exception
+     */
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
     @GetMapping()
     public AjaxResult getInfo() throws Exception
     {
+        //调用redis内置api获取redis服务器的相关信息
         Properties info = (Properties) redisTemplate.execute((RedisCallback<Object>) connection -> connection.info());
         Properties commandStats = (Properties) redisTemplate.execute((RedisCallback<Object>) connection -> connection.info("commandstats"));
         Object dbSize = redisTemplate.execute((RedisCallback<Object>) connection -> connection.dbSize());

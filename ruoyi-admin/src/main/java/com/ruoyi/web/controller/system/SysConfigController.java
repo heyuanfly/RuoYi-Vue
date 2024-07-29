@@ -23,8 +23,8 @@ import com.ruoyi.system.domain.SysConfig;
 import com.ruoyi.system.service.ISysConfigService;
 
 /**
- * 参数配置 信息操作处理
- * 
+ * 对数据库和redis中的系统配置参数进行crud操纵
+ *
  * @author ruoyi
  */
 @RestController
@@ -35,7 +35,7 @@ public class SysConfigController extends BaseController
     private ISysConfigService configService;
 
     /**
-     * 获取参数配置列表
+     * 从数据库查询系统参数配置列表
      */
     @PreAuthorize("@ss.hasPermi('system:config:list')")
     @GetMapping("/list")
@@ -46,6 +46,11 @@ public class SysConfigController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 从数据库中获取参数列表，使用ExcelUtil导出excel文件并返回
+     * @param response
+     * @param config
+     */
     @Log(title = "参数管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:config:export')")
     @PostMapping("/export")
@@ -63,6 +68,7 @@ public class SysConfigController extends BaseController
     @GetMapping(value = "/{configId}")
     public AjaxResult getInfo(@PathVariable Long configId)
     {
+
         return success(configService.selectConfigById(configId));
     }
 
@@ -120,7 +126,7 @@ public class SysConfigController extends BaseController
     }
 
     /**
-     * 刷新参数缓存
+     * 删除配置redis缓存，重新从数据库读出配置并写入到redis缓存
      */
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @Log(title = "参数管理", businessType = BusinessType.CLEAN)

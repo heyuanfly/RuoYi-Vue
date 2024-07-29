@@ -19,7 +19,7 @@ import com.ruoyi.system.service.ISysMenuService;
 
 /**
  * 登录验证
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -36,7 +36,7 @@ public class SysLoginController
 
     /**
      * 登录方法
-     * 
+     *
      * @param loginBody 登录信息
      * @return 结果
      */
@@ -44,8 +44,11 @@ public class SysLoginController
     public AjaxResult login(@RequestBody LoginBody loginBody)
     {
         AjaxResult ajax = AjaxResult.success();
-        // 生成令牌
-        String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
+        // 调用service层完成登录逻辑，并生成令牌，返回给前端
+        String token = loginService.login(
+                loginBody.getUsername(),
+                loginBody.getPassword(),
+                loginBody.getCode(),
                 loginBody.getUuid());
         ajax.put(Constants.TOKEN, token);
         return ajax;
@@ -53,16 +56,17 @@ public class SysLoginController
 
     /**
      * 获取用户信息
-     * 
+     *
      * @return 用户信息
      */
     @GetMapping("getInfo")
     public AjaxResult getInfo()
     {
+        //获取当前登录的用户对象
         SysUser user = SecurityUtils.getLoginUser().getUser();
-        // 角色集合
+        // 获取用户所属的角色集合
         Set<String> roles = permissionService.getRolePermission(user);
-        // 权限集合
+        // 获取用户所拥有的权限集合
         Set<String> permissions = permissionService.getMenuPermission(user);
         AjaxResult ajax = AjaxResult.success();
         ajax.put("user", user);
@@ -72,15 +76,17 @@ public class SysLoginController
     }
 
     /**
-     * 获取路由信息
-     * 
+     * 获取菜单路由信息
+     *
      * @return 路由信息
      */
     @GetMapping("getRouters")
     public AjaxResult getRouters()
     {
         Long userId = SecurityUtils.getUserId();
+        //获取可以展示给该用户的菜单列表
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
+        //构建出菜单返回给前端用于展示
         return AjaxResult.success(menuService.buildMenus(menus));
     }
 }

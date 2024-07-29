@@ -24,7 +24,7 @@ import com.ruoyi.system.service.ISysDictTypeService;
 
 /**
  * 数据字典信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -34,6 +34,11 @@ public class SysDictTypeController extends BaseController
     @Autowired
     private ISysDictTypeService dictTypeService;
 
+    /**
+     * 根据条件查询字典类型列表
+     * @param dictType
+     * @return
+     */
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysDictType dictType)
@@ -43,6 +48,11 @@ public class SysDictTypeController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 根据条件导出字典类型信息
+     * @param response
+     * @param dictType
+     */
     @Log(title = "字典类型", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:dict:export')")
     @PostMapping("/export")
@@ -54,7 +64,7 @@ public class SysDictTypeController extends BaseController
     }
 
     /**
-     * 查询字典类型详细
+     * 根据id查询字典类型详细
      */
     @PreAuthorize("@ss.hasPermi('system:dict:query')")
     @GetMapping(value = "/{dictId}")
@@ -96,7 +106,7 @@ public class SysDictTypeController extends BaseController
     }
 
     /**
-     * 删除字典类型
+     * 根据id删除字典类型
      */
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
     @Log(title = "字典类型", businessType = BusinessType.DELETE)
@@ -120,7 +130,7 @@ public class SysDictTypeController extends BaseController
     }
 
     /**
-     * 获取字典选择框列表
+     * 获取所有字典类型
      */
     @GetMapping("/optionselect")
     public AjaxResult optionselect()

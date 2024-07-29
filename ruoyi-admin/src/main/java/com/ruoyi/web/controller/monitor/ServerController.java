@@ -8,8 +8,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.framework.web.domain.Server;
 
 /**
- * 服务器监控
- * 
+ * 服务器监控:自定义Server类保存服务器信息，使用oshi库获取服务器硬件状态信息，返回给前端
+ *
  * @author ruoyi
  */
 @RestController

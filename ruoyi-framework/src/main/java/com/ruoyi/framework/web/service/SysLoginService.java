@@ -31,7 +31,7 @@ import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 登录校验方法
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -45,7 +45,7 @@ public class SysLoginService
 
     @Autowired
     private RedisCache redisCache;
-    
+
     @Autowired
     private ISysUserService userService;
 
@@ -54,7 +54,7 @@ public class SysLoginService
 
     /**
      * 登录验证
-     * 
+     *
      * @param username 用户名
      * @param password 密码
      * @param code 验证码
@@ -67,20 +67,25 @@ public class SysLoginService
         validateCaptcha(username, code, uuid);
         // 登录前置校验
         loginPreCheck(username, password);
-        // 用户验证
+        // 用户登录验证
         Authentication authentication = null;
         try
         {
+            //将前端传来的用户名/密码存入context
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             AuthenticationContextHolder.setContext(authenticationToken);
-            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
+            // 校验用户输入的用户名和密码是否正确
+            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername，取出数据库中保存的密码
             authentication = authenticationManager.authenticate(authenticationToken);
         }
         catch (Exception e)
         {
+            //如果密码不正确
             if (e instanceof BadCredentialsException)
             {
+                //记录登录日志
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+                //抛出
                 throw new UserPasswordNotMatchException();
             }
             else
@@ -102,7 +107,7 @@ public class SysLoginService
 
     /**
      * 校验验证码
-     * 
+     *
      * @param username 用户名
      * @param code 验证码
      * @param uuid 唯一标识

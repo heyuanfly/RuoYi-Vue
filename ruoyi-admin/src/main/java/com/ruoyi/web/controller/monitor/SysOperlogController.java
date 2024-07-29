@@ -20,8 +20,8 @@ import com.ruoyi.system.domain.SysOperLog;
 import com.ruoyi.system.service.ISysOperLogService;
 
 /**
- * 操作日志记录
- * 
+ * 操作日志记录：查询、导出、删除、清空
+ *
  * @author ruoyi
  */
 @RestController

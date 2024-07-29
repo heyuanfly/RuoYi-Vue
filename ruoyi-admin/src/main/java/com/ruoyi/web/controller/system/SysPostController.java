@@ -23,8 +23,8 @@ import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.service.ISysPostService;
 
 /**
- * 岗位信息操作处理
- * 
+ * 岗位信息操作处理：增删改查、导出
+ *
  * @author ruoyi
  */
 @RestController
@@ -45,7 +45,7 @@ public class SysPostController extends BaseController
         List<SysPost> list = postService.selectPostList(post);
         return getDataTable(list);
     }
-    
+
     @Log(title = "岗位管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:post:export')")
     @PostMapping("/export")

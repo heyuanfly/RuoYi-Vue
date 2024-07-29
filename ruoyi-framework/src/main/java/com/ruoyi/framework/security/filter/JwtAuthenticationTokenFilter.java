@@ -18,7 +18,7 @@ import com.ruoyi.framework.web.service.TokenService;
 
 /**
  * token过滤器 验证token有效性
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -31,10 +31,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException
     {
+        //根据request中的token到redis中查找用户
         LoginUser loginUser = tokenService.getLoginUser(request);
         if (StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getAuthentication()))
         {
+            //查看token是否过期
             tokenService.verifyToken(loginUser);
+            //将登录认证信息保存在context中
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);

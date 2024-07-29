@@ -21,7 +21,7 @@ import org.apache.commons.io.FilenameUtils;
 
 /**
  * 文件处理工具类
- * 
+ *
  * @author ruoyi
  */
 public class FileUtils
@@ -29,8 +29,8 @@ public class FileUtils
     public static String FILENAME_PATTERN = "[a-zA-Z0-9_\\-\\|\\.\\u4e00-\\u9fa5]+";
 
     /**
-     * 输出指定文件的byte数组
-     * 
+     * 根据路径把文件读入FileInputStream，再输出到OutputStream中
+     *
      * @param filePath 文件路径
      * @param os 输出流
      * @return
@@ -77,7 +77,7 @@ public class FileUtils
     }
 
     /**
-     * 写数据到文件中
+     * 使用FileOutputStream把文件字节流写到指定路径中
      *
      * @param data 数据
      * @param uploadDir 目标文件
@@ -104,8 +104,8 @@ public class FileUtils
     }
 
     /**
-     * 删除文件
-     * 
+     * 调用jdk内置File.delete删除指定路径对应的文件
+     *
      * @param filePath 文件
      * @return
      */
@@ -122,8 +122,8 @@ public class FileUtils
     }
 
     /**
-     * 文件名称验证
-     * 
+     * 文件名称验证，判断字符串是否符合指定模式
+     *
      * @param filename 文件名称
      * @return true 正常 false 非法
      */
@@ -133,8 +133,8 @@ public class FileUtils
     }
 
     /**
-     * 检查文件是否可下载
-     * 
+     * 检查文件是否可下载：路径中是否包含“..“,或者文件扩展名是否在允许列表中
+     *
      * @param resource 需要下载的文件
      * @return true 正常 false 非法
      */
@@ -158,7 +158,7 @@ public class FileUtils
 
     /**
      * 下载文件名重新编码
-     * 
+     *
      * @param request 请求对象
      * @param fileName 文件名
      * @return 编码后的文件名
@@ -192,7 +192,7 @@ public class FileUtils
     }
 
     /**
-     * 下载文件名重新编码
+     * 下载文件名重新编码，设置响应头返回文件信息
      *
      * @param response 响应对象
      * @param realFileName 真实文件名
@@ -209,13 +209,15 @@ public class FileUtils
                 .append("utf-8''")
                 .append(percentEncodedFileName);
 
+        //将指定响应头暴露给浏览器
         response.addHeader("Access-Control-Expose-Headers", "Content-Disposition,download-filename");
+        //文件形式：附件
         response.setHeader("Content-disposition", contentDispositionValue.toString());
         response.setHeader("download-filename", percentEncodedFileName);
     }
 
     /**
-     * 百分号编码工具方法
+     * 百分号编码工具方法,将所有加号+替换为%20
      *
      * @param s 需要百分号编码的字符串
      * @return 百分号编码后的字符串
@@ -227,8 +229,8 @@ public class FileUtils
     }
 
     /**
-     * 获取图像后缀
-     * 
+     * 获取图像后缀:根据文件字节流头部的数值确定文件类型
+     *
      * @param photoByte 图像数据
      * @return 后缀名
      */
@@ -256,8 +258,8 @@ public class FileUtils
     }
 
     /**
-     * 获取文件名称 /profile/upload/2022/04/16/ruoyi.png -- ruoyi.png
-     * 
+     * 使用substring获取不带路径前缀的文件名称 /profile/upload/2022/04/16/ruoyi.png -- ruoyi.png
+     *
      * @param fileName 路径名称
      * @return 没有文件路径的名称
      */
@@ -274,8 +276,9 @@ public class FileUtils
     }
 
     /**
-     * 获取不带后缀文件名称 /profile/upload/2022/04/16/ruoyi.png -- ruoyi
-     * 
+     * 使用apache提供的FilenameUtils.getBaseName(fileName);
+     * 获取不带路径前缀和扩展名的文件名称 /profile/upload/2022/04/16/ruoyi.png -- ruoyi
+     *
      * @param fileName 路径名称
      * @return 没有文件路径和后缀的名称
      */

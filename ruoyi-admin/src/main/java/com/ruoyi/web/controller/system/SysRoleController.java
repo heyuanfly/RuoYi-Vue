@@ -32,8 +32,8 @@ import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 
 /**
- * 角色信息
- * 
+ * 角色信息，增删改查、用户授权
+ *
  * @author ruoyi
  */
 @RestController
@@ -125,7 +125,7 @@ public class SysRoleController extends BaseController
             return error("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
         role.setUpdateBy(getUsername());
-        
+
         if (roleService.updateRole(role) > 0)
         {
             // 更新缓存用户权限
@@ -142,7 +142,7 @@ public class SysRoleController extends BaseController
     }
 
     /**
-     * 修改保存数据权限
+     * 修改 保存数据 权限
      */
     @PreAuthorize("@ss.hasPermi('system:role:edit')")
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
@@ -190,7 +190,7 @@ public class SysRoleController extends BaseController
     }
 
     /**
-     * 查询已分配用户角色列表
+     * 查询已分配用户的角色 列表
      */
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/authUser/allocatedList")
@@ -202,7 +202,7 @@ public class SysRoleController extends BaseController
     }
 
     /**
-     * 查询未分配用户角色列表
+     * 查询未分配用户的角色 列表
      */
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/authUser/unallocatedList")

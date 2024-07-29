@@ -23,13 +23,13 @@ import oshi.util.Util;
 
 /**
  * 服务器相关信息
- * 
+ *
  * @author ruoyi
  */
 public class Server
 {
     private static final int OSHI_WAIT_SECOND = 1000;
-    
+
     /**
      * CPU相关信息
      */
@@ -130,6 +130,7 @@ public class Server
         long[] prevTicks = processor.getSystemCpuLoadTicks();
         Util.sleep(OSHI_WAIT_SECOND);
         long[] ticks = processor.getSystemCpuLoadTicks();
+
         long nice = ticks[TickType.NICE.getIndex()] - prevTicks[TickType.NICE.getIndex()];
         long irq = ticks[TickType.IRQ.getIndex()] - prevTicks[TickType.IRQ.getIndex()];
         long softirq = ticks[TickType.SOFTIRQ.getIndex()] - prevTicks[TickType.SOFTIRQ.getIndex()];
@@ -209,7 +210,7 @@ public class Server
 
     /**
      * 字节转换
-     * 
+     *
      * @param size 字节大小
      * @return 转换后值
      */
