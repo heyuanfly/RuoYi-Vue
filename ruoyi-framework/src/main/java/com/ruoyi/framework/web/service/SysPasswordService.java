@@ -14,7 +14,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.security.context.AuthenticationContextHolder;
 
 /**
- * 登录密码方法
+ * 登录密码输错次数记录，设置登录锁定时间
  *
  * @author ruoyi
  */

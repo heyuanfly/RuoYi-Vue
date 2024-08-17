@@ -125,7 +125,7 @@ public class TokenService
     }
 
     /**
-     * 验证令牌有效期，相差不足20分钟，自动刷新缓存
+     * 更新令牌有效期，如果20分钟内会过期，就续期
      *
      * @param loginUser
      * @return 令牌
@@ -141,7 +141,7 @@ public class TokenService
     }
 
     /**
-     * 刷新令牌有效期
+     * 更新令牌，刷新令牌有效期
      *
      * @param loginUser 登录信息
      */

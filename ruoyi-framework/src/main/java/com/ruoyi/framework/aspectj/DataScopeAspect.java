@@ -94,6 +94,7 @@ public class DataScopeAspect
         List<String> conditions = new ArrayList<String>();
         List<String> scopeCustomIds = new ArrayList<String>();
         user.getRoles().forEach(role -> {
+            //如果角色采用自定义数据权限模式，且拥有指定的权限
             if (DATA_SCOPE_CUSTOM.equals(role.getDataScope()) && StringUtils.containsAny(role.getPermissions(), Convert.toStrArray(permission)))
             {
                 scopeCustomIds.add(Convert.toStr(role.getRoleId()));
